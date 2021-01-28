@@ -248,6 +248,7 @@ IPSEC4-m = \
 	ipv4/esp4 \
 	ipv4/xfrm4_tunnel \
 	ipv4/ipcomp \
+	$(if $(CONFIG_XFRM_OFFLOAD),ipv4/esp4_offload) \
 
 IPSEC4-m += $(ifeq ($$(strip $$(call CompareKernelPatchVer,$$(KERNEL_PATCHVER),le,5.2))),ipv4/xfrm4_mode_beet ipv4/xfrm4_mode_transport ipv4/xfrm4_mode_tunnel)
 
@@ -262,8 +263,7 @@ define KernelPackage/ipsec4
 	CONFIG_INET_XFRM_MODE_BEET \
 	CONFIG_INET_XFRM_MODE_TRANSPORT \
 	CONFIG_INET_XFRM_MODE_TUNNEL \
-	CONFIG_INET_XFRM_TUNNEL \
-	CONFIG_INET_ESP_OFFLOAD=n
+	CONFIG_INET_XFRM_TUNNEL
   FILES:=$(foreach mod,$(IPSEC4-m),$(LINUX_DIR)/net/$(mod).ko)
   AUTOLOAD:=$(call AutoLoad,32,$(notdir $(IPSEC4-m)))
 endef
@@ -288,6 +288,7 @@ IPSEC6-m = \
 	ipv6/esp6 \
 	ipv6/xfrm6_tunnel \
 	ipv6/ipcomp6 \
+	$(if $(CONFIG_XFRM_OFFLOAD),ipv6/esp6_offload) \
 
 IPSEC6-m += $(ifeq ($$(strip $$(call CompareKernelPatchVer,$$(KERNEL_PATCHVER),le,5.2))),ipv6/xfrm6_mode_beet ipv6/xfrm6_mode_transport ipv6/xfrm6_mode_tunnel)
 
@@ -302,8 +303,7 @@ define KernelPackage/ipsec6
 	CONFIG_INET6_XFRM_MODE_BEET \
 	CONFIG_INET6_XFRM_MODE_TRANSPORT \
 	CONFIG_INET6_XFRM_MODE_TUNNEL \
-	CONFIG_INET6_XFRM_TUNNEL \
-	CONFIG_INET6_ESP_OFFLOAD=n
+	CONFIG_INET6_XFRM_TUNNEL
   FILES:=$(foreach mod,$(IPSEC6-m),$(LINUX_DIR)/net/$(mod).ko)
   AUTOLOAD:=$(call AutoLoad,32,$(notdir $(IPSEC6-m)))
 endef
@@ -387,6 +387,21 @@ endef
 
 $(eval $(call KernelPackage,xfrm-interface))
 
+
+define KernelPackage/xfrm-offload
+  SUBMENU:=$(NETWORK_SUPPORT_MENU)
+  TITLE:=IPsec XFRM offload suppprt
+  KCONFIG:= \
+	CONFIG_XFRM_OFFLOAD=y \
+	CONFIG_INET_ESP_OFFLOAD=y \
+	CONFIG_INET6_ESP_OFFLOAD=y
+endef
+
+define KernelPackage/xfrm-offload/description
+ IPsec XFRM offload suppprt
+endef
+
+$(eval $(call KernelPackage,xfrm-offload))
 
 define KernelPackage/iptunnel4
   SUBMENU:=$(NETWORK_SUPPORT_MENU)
