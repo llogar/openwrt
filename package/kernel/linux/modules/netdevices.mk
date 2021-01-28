@@ -1227,3 +1227,20 @@ define KernelPackage/sfc-falcon/description
 endef
 
 $(eval $(call KernelPackage,sfc-falcon))
+
+define KernelPackage/chelsio-t4
+  SUBMENU:=$(NETWORK_DEVICES_MENU)
+  TITLE:=Chelsio Communications T4/T5/T6 Ethernet support
+  DEPENDS:=@PCI_SUPPORT +kmod-ptp
+  KCONFIG:= \
+	CONFIG_CHELSIO_T4 \
+	CONFIG_CHELSIO_LIB=y
+  FILES:=$(LINUX_DIR)/drivers/net/ethernet/chelsio/cxgb4/cxgb4.ko
+  AUTOLOAD:=$(call AutoLoad,35,cxgb4)
+endef
+
+define KernelPackage/chelsio-t4/description
+  Chelsio Communications T4/T5/T6 Ethernet support
+endef
+
+$(eval $(call KernelPackage,chelsio-t4))
