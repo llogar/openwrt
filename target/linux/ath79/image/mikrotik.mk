@@ -62,3 +62,11 @@ define Device/mikrotik_routerboard-wapr-2nd
   IMAGE_SIZE := 16256k
 endef
 TARGET_DEVICES += mikrotik_routerboard-wapr-2nd
+
+define Device/mikrotik_routerboard-mapl-2nd
+  $(Device/mikrotik_nor)
+  SOC := qca9533
+  DEVICE_MODEL := RouterBOARD mAPL-2nD (mAP lite)
+  IMAGE_SIZE := 16256k
+endef
+TARGET_DEVICES += mikrotik_routerboard-mapl-2nd
