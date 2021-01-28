@@ -839,3 +839,26 @@ endef
 
 $(eval $(call KernelPackage,crypto-xts))
 
+
+define KernelPackage/crypto-hw-chelsio-t4
+  TITLE:=Chelsio Crypto Co-processor Driver
+  DEPENDS:=+kmod-chelsio-t4 +kmod-crypto-sha1 +kmod-crypto-sha256 +kmod-crypto-sha512 +kmod-crypto-authenc +kmod-crypto-gf128
+  KCONFIG:= \
+	CONFIG_CRYPTO_HW=y \
+	CONFIG_CRYPTO_DEV_CHELSIO
+  FILES:=$(LINUX_DIR)/drivers/crypto/chelsio/chcr.ko
+  AUTOLOAD:=$(call AutoLoad,36,chcr)
+  $(call AddDepends/crypto)
+endef
+
+$(eval $(call KernelPackage,crypto-hw-chelsio-t4))
+
+
+define KernelPackage/crypto-hw-chelsio-t4-ipsec
+  TITLE:=Chelsio IPSec XFRM Tx crypto offload
+  DEPENDS:=kmod-crypto-hw-chelsio-t4 +kmod-xfrm-offload
+  KCONFIG:=CONFIG_CHELSIO_IPSEC_INLINE=y
+  $(call AddDepends/crypto)
+endef
+
+$(eval $(call KernelPackage,crypto-hw-chelsio-t4-ipsec))
